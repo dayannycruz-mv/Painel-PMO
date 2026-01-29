@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Operacional - Escritório de Projetos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <style>
+        body { background-color: #f4f7f6; font-family: 'Inter', sans-serif; }
+        .card { border-radius: 12px; border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.05); transition: 0.3s; }
+        
+        /* Cabeçalho Ajustado */
+        .header-section { 
+            background: #001529; 
+            color: white; 
+            padding: 20px 40px; 
+            margin-bottom: 30px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
+        }
+        .header-logo { width: 150px; height: auto; } /* Ajuste o tamanho da logo aqui */
+        .header-content { flex-grow: 1; text-align: center; margin-right: 150px; } /* Margem compensa a logo para centralizar texto */
+        .subtitle-pm { color: #ffca28; font-weight: 500; letter-spacing: 1px; margin-top: -5px; }
+
+        .farol { height: 12px; width: 12px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+        .bg-vermelho { background-color: #ff4d4f; box-shadow: 0 0 8px #ff4d4f; }
+        .bg-amarelo { background-color: #ffec3d; box-shadow: 0 0 8px #ffec3d; }
+        .section-title { border-left: 5px solid #1890ff; padding-left: 15px; margin-bottom: 20px; font-weight: bold; color: #001529; }
+        .btn-bi { background-color: #f2c811; color: #333; font-weight: bold; border: none; }
+        .btn-bi:hover { background-color: #d4ae0e; }
+    </style>
+</head>
+<body>
+
+<header class="header-section">
+    <div class="header-left">
+        <img src="C:\Users\dayanny.cruz\Pictures\Screenshots\MV.png" alt="Logo Empresa" class="header-logo">
+    </div>
+
+    <div class="header-content">
+        <h1 class="fw-bold m-0">Gestão de Metas e Performance</h1>
+        <p class="subtitle-pm text-uppercase">Escritório de Projetos Fábrica</p>
+        <small id="data-semana" class="text-info"></small>
+    </div>
+</header>
+
+<div class="container-fluid px-4">
+    <div class="row g-4">
+        <div class="col-xl-3 col-lg-4">
+            <h5 class="section-title">Metas Atuais</h5>
+            <div class="card p-4 text-center mb-4">
+                <h6 class="text-muted mb-3">Participação Pré-Onboarding</h6>
+                <h2 id="txt-percentual" class="display-6 fw-bold mb-0">--%</h2>
+                <div style="height: 150px;"><canvas id="chartOnboarding"></canvas></div>
+            </div>
+
+            <h5 class="section-title">Análise Estratégica</h5>
+            <div class="card p-4 bg-white text-center">
+                <div class="mb-3">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c9/Power_bi_logo_black.svg" alt="BI" style="height: 35px;">
+                </div>
+                <h6>Painel e Indicadores de Portfólio</h6>
+                <p class="small text-muted">Visão macro de todos os projetos e histórico.</p>
+                <a href="COLE_O_LINK_DO_SEU_BI_AQUI" target="_blank" class="btn btn-bi w-100 shadow-sm">ABRIR PAINEL BI ➔</a>
+            </div>
+        </div>
+
+        <div class="col-xl-9 col-lg-8">
+            <h5 class="section-title">Acompanhamento Operacional</h5>
+            <div class="card p-4">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+                    <h5 class="text-danger mb-2 mb-md-0">🚦 Projetos em Atenção (Semana)</h5>
+                    <input type="text" id="filtroProjeto" class="form-control form-control-sm w-50" placeholder="Filtrar por projeto, gerente ou tipo...">
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Status</th>
+                                <th>Projeto</th>
+                                <th>Tipo</th>
+                                <th>Gte. Serviços</th>
+                                <th>Gte. Fábrica/Flowti</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-body">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const csvOnboarding = "LINK_AQUI"; 
+    const csvProjetos = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTgfQgFlnyb0o1MrBWpN91wRtvQm4ZqQ-3CVlMg3sfqRimzAxgRZMG8T10ngr8PdNKc-_6ldopN_vI2/pub?gid=919732841&single=true&output=csv";    
+
+    function setarDatas() {
+        const hoje = new Date();
+        const d = hoje.getDay();
+        const diffSegunda = hoje.getDate() - d + (d === 0 ? -6 : 1);
+        const segunda = new Date(new Date().setDate(diffSegunda)).toLocaleDateString();
+        const sexta = new Date(new Date().setDate(diffSegunda + 4)).toLocaleDateString();
+        document.getElementById('data-semana').innerText = `Período: ${segunda} a ${sexta}`;
+    }
+
+    function carregarDados() {
+        Papa.parse(csvOnboarding, {
+            download: true, header: true,
+            complete: function(res) {
+                if(res.data[0]) {
+                    const perc = parseFloat(res.data[0].Percentual || 0);
+                    const cor = perc < 80 ? '#ff4d4f' : '#52c41a';
+                    document.getElementById('txt-percentual').innerText = perc + "%";
+                    document.getElementById('txt-percentual').style.color = cor;
+                    atualizarGrafico(perc, cor);
+                }
+            }
+        });
+
+        Papa.parse(csvProjetos, {
+            download: true, header: true,
+            complete: function(res) {
+                window.dadosProjetos = res.data;
+                renderizarTabela(res.data);
+            }
+        });
+    }
+
+    function renderizarTabela(lista) {
+        const body = document.getElementById('tabela-body');
+        body.innerHTML = "";
+        lista.forEach(p => {
+            if(!p.Projeto) return;
+            const corFarol = p.Status?.toLowerCase().includes('vermelho') ? 'bg-vermelho' : 'bg-amarelo';
+            body.innerHTML += `
+                <tr>
+                    <td><span class="farol ${corFarol}"></span> <small class="text-muted">${p.Status}</small></td>
+                    <td><strong>${p.Projeto}</strong></td>
+                    <td><span class="badge bg-light text-primary border" style="font-size:0.75rem">${p.Tipo}</span></td>
+                    <td>${p.Gerente_Servicos}</td>
+                    <td>${p.Gerente_Fabrica}</td>
+                </tr>`;
+        });
+    }
+
+    document.getElementById('filtroProjeto').addEventListener('input', function(e) {
+        const t = e.target.value.toLowerCase();
+        const filtrados = window.dadosProjetos.filter(p => 
+            p.Projeto?.toLowerCase().includes(t) || 
+            p.Gerente_Servicos?.toLowerCase().includes(t) ||
+            p.Gerente_Fabrica?.toLowerCase().includes(t) ||
+            p.Tipo?.toLowerCase().includes(t)
+        );
+        renderizarTabela(filtrados);
+    });
+
+    let chartObj;
+    function atualizarGrafico(v, cor) {
+        if(chartObj) chartObj.destroy();
+        chartObj = new Chart(document.getElementById('chartOnboarding'), {
+            type: 'doughnut',
+            data: { datasets: [{ data: [v, 100-v], backgroundColor: [cor, '#e9ecef'] }] },
+            options: { cutout: '80%', plugins: { legend: { display: false } } }
+        });
+    }
+
+    setarDatas();
+    carregarDados();
+    setInterval(carregarDados, 300000); 
+</script>
+</body>
+</html>
