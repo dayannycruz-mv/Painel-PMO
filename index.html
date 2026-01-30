@@ -106,25 +106,35 @@
         Papa.parse(csvOnboarding, {
     download: true, 
     header: true,
+    skipEmptyLines: true, // Ignora linhas em branco que o mesclado gera
     complete: function(res) {
-        if (res.data && res.data[0]) {
-            // Limpa o valor vindo da planilha
-            let valorBruto = String(res.data[0].Percentual || "0").replace("%", "").replace(",", ".");
-            const perc = Math.round(parseFloat(valorBruto)) || 0;
+        if (res.data && res.data.length > 0) {
+            // Procura o primeiro valor válido na coluna 'Percentual'
+            // Isso resolve se houver buracos por causa de células mescladas
+            let dadoEncontrado = res.data.find(linha => linha.Percentual && linha.Percentual.trim() !== "");
             
-            // Define a cor baseada na meta (80%)
+            let valorTexto = dadoEncontrado ? String(dadoEncontrado.Percentual) : "0";
+            
+            // Limpa o valor (tira %, troca vírgula por ponto)
+            let valorLimpo = valorTexto.replace("%", "").replace(",", ".").trim();
+            const perc = Math.round(parseFloat(valorLimpo)) || 0;
+            
+            // Lógica de Cor
             const cor = perc < 80 ? '#ff4d4f' : '#52c41a';
             const statusText = perc < 80 ? 'Abaixo da Meta' : 'Meta Atingida';
             
-            // Atualiza o HTML
+            // Atualiza a tela
             const elementoPerc = document.getElementById('txt-percentual');
             const elementoStatus = document.getElementById('label-status');
 
-            elementoPerc.innerText = perc + "%";
-            elementoPerc.style.color = cor;
-            
-            elementoStatus.innerText = statusText;
-            elementoStatus.style.color = cor;
+            if(elementoPerc) {
+                elementoPerc.innerText = perc + "%";
+                elementoPerc.style.color = cor;
+            }
+            if(elementoStatus) {
+                elementoStatus.innerText = statusText;
+                elementoStatus.style.color = cor;
+            }
         }
     }
 });
@@ -221,6 +231,7 @@
 </script>
 </body>
 </html>
+
 
 
 
