@@ -9,77 +9,81 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
         body { background-color: #f4f7f6; font-family: 'Inter', sans-serif; }
-        .card { border-radius: 12px; border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.05); transition: 0.3s; }
         
-        /* Cabeçalho Ajustado */
+        /* Cabeçalho */
         .header-section { 
             background: #001529; 
             color: white; 
             padding: 20px 40px; 
-            margin-bottom: 30px; 
             display: flex; 
-            align-items: center; 
-            justify-content: space-between;
+            align-items: center;
         }
-        .header-logo { width: 150px; height: auto; } /* Ajuste o tamanho da logo aqui */
-        .header-content { flex-grow: 1; text-align: center; margin-right: 150px; } /* Margem compensa a logo para centralizar texto */
-        .subtitle-pm { color: #ffca28; font-weight: 500; letter-spacing: 1px; margin-top: -5px; }
 
-        .farol { height: 12px; width: 12px; border-radius: 50%; display: inline-block; margin-right: 5px; }
-        .bg-vermelho { background-color: #ff4d4f; box-shadow: 0 0 8px #ff4d4f; }
-        .bg-amarelo { background-color: #ffec3d; box-shadow: 0 0 8px #ffec3d; }
-        .section-title { border-left: 5px solid #1890ff; padding-left: 15px; margin-bottom: 20px; font-weight: bold; color: #001529; }
-        .btn-bi { background-color: #f2c811; color: #333; font-weight: bold; border: none; }
-        .btn-bi:hover { background-color: #d4ae0e; }
+        /* DICA: Esse filtro tenta remover o fundo branco da logo via código */
+        .header-logo { 
+            width: 150px; 
+            height: auto; 
+            mix-blend-mode: multiply; /* Faz o branco da imagem "sumir" se o fundo for escuro */
+            filter: brightness(1.2); /* Ajusta brilho se necessário */
+        }
+
+        .header-content { flex-grow: 1; text-align: center; }
+        .subtitle-pm { color: #ffca28; font-weight: 500; font-size: 0.9rem; margin-top: -5px; }
+
+        /* Estilos do Farol */
+        .farol { height: 14px; width: 14px; border-radius: 50%; display: inline-block; margin-right: 8px; vertical-align: middle; }
+        .bg-vermelho { background-color: #ff4d4f; box-shadow: 0 0 10px #ff4d4f; }
+        .bg-amarelo { background-color: #ffec3d; box-shadow: 0 0 10px #ffec3d; }
+        .bg-verde { background-color: #52c41a; box-shadow: 0 0 10px #52c41a; }
+
+        .card { border-radius: 12px; border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .section-title { border-left: 5px solid #1890ff; padding-left: 15px; margin-bottom: 20px; font-weight: bold; }
+        .btn-bi { background-color: #f2c811; color: #333; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<header class="header-section">
+<header class="header-section shadow">
     <div class="header-left">
-        <img src="MV.png" alt="Logo Empresa" class="header-logo">
+        <img src="logo.png" alt="Logo" class="header-logo">
     </div>
-
     <div class="header-content">
-        <h1 class="fw-bold m-0">Gestão de Metas e Performance</h1>
-        <p class="subtitle-pm text-uppercase">Escritório de Projetos Fábrica</p>
+        <h1 class="fw-bold m-0 h3">Gestão de Metas e Performance</h1>
+        <p class="subtitle-pm text-uppercase m-0">Escritório de Projetos Fábrica</p>
         <small id="data-semana" class="text-info"></small>
     </div>
-</header>
+    <div style="width: 150px;"></div> </header>
 
-<div class="container-fluid px-4">
+<div class="container-fluid px-4 mt-4">
     <div class="row g-4">
         <div class="col-xl-3 col-lg-4">
-            <h5 class="section-title">Metas Atuais</h5>
+            <h5 class="section-title">Metas</h5>
             <div class="card p-4 text-center mb-4">
-                <h6 class="text-muted mb-3">Participação Pré-Onboarding</h6>
-                <h2 id="txt-percentual" class="display-6 fw-bold mb-0">--%</h2>
-                <div style="height: 150px;"><canvas id="chartOnboarding"></canvas></div>
+                <h6 class="text-muted mb-3 small">Participação Pré-Onboarding</h6>
+                <h2 id="txt-percentual" class="fw-bold mb-0">--%</h2>
+                <div style="height: 140px;"><canvas id="chartOnboarding"></canvas></div>
             </div>
 
-            <h5 class="section-title">Análise Estratégica</h5>
-            <div class="card p-4 bg-white text-center">
-                <div class="mb-3">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c9/Power_bi_logo_black.svg" alt="BI" style="height: 35px;">
-                </div>
-                <h6>Painel e Indicadores de Portfólio</h6>
-                <p class="small text-muted">Visão macro de todos os projetos e histórico.</p>
-                <a href="COLE_O_LINK_DO_SEU_BI_AQUI" target="_blank" class="btn btn-bi w-100 shadow-sm">ABRIR PAINEL BI ➔</a>
+            <h5 class="section-title">Estratégico</h5>
+            <div class="card p-3 bg-white text-center">
+                <p class="small fw-bold mb-2">Painel de Portfólio</p>
+                <a href="LINK_DO_SEU_BI" target="_blank" class="btn btn-bi btn-sm w-100">ABRIR BI ➔</a>
             </div>
         </div>
 
         <div class="col-xl-9 col-lg-8">
             <h5 class="section-title">Acompanhamento Operacional</h5>
             <div class="card p-4">
-                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
-                    <h5 class="text-danger mb-2 mb-md-0">🚦 Projetos em Atenção (Semana)</h5>
-                    <input type="text" id="filtroProjeto" class="form-control form-control-sm w-50" placeholder="Filtrar por projeto, gerente ou tipo...">
+                <div class="d-flex flex-column flex-md-row justify-content-between mb-4">
+                    <h6 class="text-danger fw-bold">🚦 Projetos em Atenção</h6>
+                    <input type="text" id="filtroProjeto" class="form-control form-control-sm w-50" placeholder="Buscar projeto, gerente ou tipo...">
                 </div>
+                
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle">
+                    <table class="table table-hover align-middle" style="font-size: 0.85rem;">
                         <thead class="table-light">
                             <tr>
-                                <th>Status</th>
+                                <th>Farol</th>
                                 <th>Projeto</th>
                                 <th>Tipo</th>
                                 <th>Gte. Serviços</th>
@@ -96,32 +100,23 @@
 </div>
 
 <script>
-    const csvOnboarding = "LINK_AQUI"; 
-    const csvProjetos = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTgfQgFlnyb0o1MrBWpN91wRtvQm4ZqQ-3CVlMg3sfqRimzAxgRZMG8T10ngr8PdNKc-_6ldopN_vI2/pub?gid=919732841&single=true&output=csv";    
-
-    function setarDatas() {
-        const hoje = new Date();
-        const d = hoje.getDay();
-        const diffSegunda = hoje.getDate() - d + (d === 0 ? -6 : 1);
-        const segunda = new Date(new Date().setDate(diffSegunda)).toLocaleDateString();
-        const sexta = new Date(new Date().setDate(diffSegunda + 4)).toLocaleDateString();
-        document.getElementById('data-semana').innerText = `Período: ${segunda} a ${sexta}`;
-    }
+    const csvOnboarding = "SEU_LINK_CSV_1"; 
+    const csvProjetos = "SEU_LINK_CSV_2";    
 
     function carregarDados() {
+        // Onboarding
         Papa.parse(csvOnboarding, {
             download: true, header: true,
             complete: function(res) {
-                if(res.data[0]) {
-                    const perc = parseFloat(res.data[0].Percentual || 0);
-                    const cor = perc < 80 ? '#ff4d4f' : '#52c41a';
-                    document.getElementById('txt-percentual').innerText = perc + "%";
-                    document.getElementById('txt-percentual').style.color = cor;
-                    atualizarGrafico(perc, cor);
-                }
+                const perc = parseFloat(res.data[0].Percentual || 0);
+                const cor = perc < 80 ? '#ff4d4f' : '#52c41a';
+                document.getElementById('txt-percentual').innerText = perc + "%";
+                document.getElementById('txt-percentual').style.color = cor;
+                atualizarGrafico(perc, cor);
             }
         });
 
+        // Projetos
         Papa.parse(csvProjetos, {
             download: true, header: true,
             complete: function(res) {
@@ -136,43 +131,55 @@
         body.innerHTML = "";
         lista.forEach(p => {
             if(!p.Projeto) return;
-            const corFarol = p.Status?.toLowerCase().includes('vermelho') ? 'bg-vermelho' : 'bg-amarelo';
+
+            // Busca a cor diretamente da coluna "Farol" da planilha
+            const corPlanilha = (p.Farol || "").toLowerCase().trim();
+            let classeFarol = "bg-amarelo"; // padrão se estiver vazio
+            
+            if(corPlanilha.includes("vermelho")) classeFarol = "bg-vermelho";
+            else if(corPlanilha.includes("verde")) classeFarol = "bg-verde";
+            else if(corPlanilha.includes("amarelo")) classeFarol = "bg-amarelo";
+
             body.innerHTML += `
                 <tr>
-                    <td><span class="farol ${corFarol}"></span> <small class="text-muted">${p.Status}</small></td>
-                    <td><strong>${p.Projeto}</strong></td>
-                    <td><span class="badge bg-light text-primary border" style="font-size:0.75rem">${p.Tipo}</span></td>
+                    <td><span class="farol ${classeFarol}"></span> <strong>${p.Farol || 'Atenção'}</strong></td>
+                    <td>${p.Projeto}</td>
+                    <td><span class="badge bg-light text-dark border">${p.Tipo}</span></td>
                     <td>${p.Gerente_Servicos}</td>
                     <td>${p.Gerente_Fabrica}</td>
                 </tr>`;
         });
     }
 
+    // Filtro
     document.getElementById('filtroProjeto').addEventListener('input', function(e) {
         const t = e.target.value.toLowerCase();
         const filtrados = window.dadosProjetos.filter(p => 
-            p.Projeto?.toLowerCase().includes(t) || 
-            p.Gerente_Servicos?.toLowerCase().includes(t) ||
-            p.Gerente_Fabrica?.toLowerCase().includes(t) ||
-            p.Tipo?.toLowerCase().includes(t)
+            Object.values(p).some(val => String(val).toLowerCase().includes(t))
         );
         renderizarTabela(filtrados);
     });
 
+    // Gráfico e Datas (simplificados)
     let chartObj;
     function atualizarGrafico(v, cor) {
         if(chartObj) chartObj.destroy();
         chartObj = new Chart(document.getElementById('chartOnboarding'), {
             type: 'doughnut',
-            data: { datasets: [{ data: [v, 100-v], backgroundColor: [cor, '#e9ecef'] }] },
-            options: { cutout: '80%', plugins: { legend: { display: false } } }
+            data: { datasets: [{ data: [v, 100-v], backgroundColor: [cor, '#eee'] }] },
+            options: { cutout: '75%', plugins: { legend: { display: false } } }
         });
+    }
+
+    function setarDatas() {
+        const hoje = new Date();
+        const seg = new Date(hoje.setDate(hoje.getDate() - hoje.getDay() + 1)).toLocaleDateString();
+        const sex = new Date(hoje.setDate(hoje.getDate() - hoje.getDay() + 5)).toLocaleDateString();
+        document.getElementById('data-semana').innerText = `Semana: ${seg} a ${sex}`;
     }
 
     setarDatas();
     carregarDados();
-    setInterval(carregarDados, 300000); 
 </script>
 </body>
-
 </html>
