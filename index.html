@@ -73,54 +73,56 @@
         </div>
 
         <div class="col-xl-9 col-lg-8">
-            <h5 class="section-title">Acompanhamento Operacional</h5>
-            <div class="card p-4">
-                <div class="d-flex flex-column flex-md-row justify-content-between mb-4">
-                    <h6 class="text-danger fw-bold">🚦 Projetos em Atenção</h6>
-                    <input type="text" id="filtroProjeto" class="form-control form-control-sm w-50" placeholder="Buscar projeto, gerente ou tipo...">
-                </div>
-                
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle" style="font-size: 0.85rem;">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Projeto</th>
-                                <th>Farol</th>
-                                <th>Status</th>
-                                <th>Tipo</th>
-                                <th>Gte. Serviços</th>
-                                <th>Gte. Fábrica/Flowti</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabela-body">
-                            </tbody>
-                    </table>
-                </div>
-            </div>
+    <h5 class="section-title">Acompanhamento Operacional</h5>
+    <div class="card p-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between mb-4">
+            <h6 class="text-danger fw-bold">🚦 Projetos em Atenção</h6>
+            <input type="text" id="filtroProjeto" class="form-control form-control-sm w-50" placeholder="Buscar projeto, gerente ou tipo...">
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table table-hover align-middle" style="font-size: 0.85rem;">
+                <thead class="table-light">
+                    <tr>
+                        <th>Projeto</th>
+                        <th class="text-center">Farol</th>
+                        <th>Status</th>
+                        <th>Tipo</th>
+                        <th>Gte. Serviços</th>
+                        <th>Gte. Fábrica/Flowti</th>
+                    </tr>
+                </thead>
+                <tbody id="tabela-body">
+                    </tbody>
+            </table>
         </div>
     </div>
 </div>
 
 <script>
-    const csvOnboarding = "SEU_LINK_CSV_1"; 
+    const csvOnboarding = "SEU_LINK_AQUI"; 
     const csvProjetos = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTgfQgFlnyb0o1MrBWpN91wRtvQm4ZqQ-3CVlMg3sfqRimzAxgRZMG8T10ngr8PdNKc-_6ldopN_vI2/pub?gid=919732841&single=true&output=csv";    
 
     function carregarDados() {
-        // Onboarding
+        // Onboarding (Metas)
         Papa.parse(csvOnboarding, {
             download: true, header: true,
             complete: function(res) {
-                const perc = parseFloat(res.data[0].Percentual || 0);
-                const cor = perc < 80 ? '#ff4d4f' : '#52c41a';
-                document.getElementById('txt-percentual').innerText = perc + "%";
-                document.getElementById('txt-percentual').style.color = cor;
-                atualizarGrafico(perc, cor);
+                if(res.data[0]) {
+                    const perc = parseFloat(res.data[0].Percentual || 0);
+                    const cor = perc < 80 ? '#ff4d4f' : '#52c41a';
+                    document.getElementById('txt-percentual').innerText = perc + "%";
+                    document.getElementById('txt-percentual').style.color = cor;
+                    atualizarGrafico(perc, cor);
+                }
             }
         });
 
-        // Projetos
+        // Projetos em Atenção
         Papa.parse(csvProjetos, {
-            download: true, header: true,
+            download: true, 
+            header: true,
+            skipEmptyLines: true,
             complete: function(res) {
                 window.dadosProjetos = res.data;
                 renderizarTabela(res.data);
@@ -131,29 +133,32 @@
     function renderizarTabela(lista) {
         const body = document.getElementById('tabela-body');
         body.innerHTML = "";
+        
         lista.forEach(p => {
+            // Se a linha não tiver nome de projeto, ignora
             if(!p.Projeto) return;
 
-            // Busca a cor diretamente da coluna "Farol" da planilha
-            const corPlanilha = (p.Farol || "").toLowerCase().trim();
-            let classeFarol = "bg-amarelo"; // padrão se estiver vazio
-            
-            if(corPlanilha.includes("vermelho")) classeFarol = "bg-vermelho";
-            else if(corPlanilha.includes("verde")) classeFarol = "bg-verde";
-            else if(corPlanilha.includes("amarelo")) classeFarol = "bg-amarelo";
+            // Define a cor do Farol (apenas o ícone)
+            const farolTexto = (p.Farol || "").toLowerCase().trim();
+            let classeFarol = "bg-amarelo";
+            if(farolTexto.includes("vermelho")) classeFarol = "bg-vermelho";
+            else if(farolTexto.includes("verde")) classeFarol = "bg-verde";
+            else if(farolTexto.includes("amarelo")) classeFarol = "bg-amarelo";
 
+            // Monta a linha na ordem solicitada: Projeto, Farol, Status, Tipo, Gte Serviços, Gte Fabrica
             body.innerHTML += `
                 <tr>
-                    <td><span class="farol ${classeFarol}"></span> <strong>${p.Farol || 'Atenção'}</strong></td>
-                    <td>${p.Projeto}</td>
-                    <td><span class="badge bg-light text-dark border">${p.Tipo}</span></td>
-                    <td>${p.Gerente_Servicos}</td>
-                    <td>${p.Gerente_Fabrica}</td>
+                    <td><strong>${p.Projeto}</strong></td>
+                    <td class="text-center"><span class="farol ${classeFarol}" title="${p.Farol}"></span></td>
+                    <td><small class="text-muted">${p.Status || ''}</small></td>
+                    <td><span class="badge bg-light text-primary border">${p.Tipo || ''}</span></td>
+                    <td>${p.Gerente_Servicos || p["Gerente Serviços"] || ''}</td>
+                    <td>${p.Gerente_Fabrica || p["Gerente Fábrica"] || ''}</td>
                 </tr>`;
         });
     }
 
-    // Filtro
+    // Filtro Global
     document.getElementById('filtroProjeto').addEventListener('input', function(e) {
         const t = e.target.value.toLowerCase();
         const filtrados = window.dadosProjetos.filter(p => 
@@ -162,7 +167,7 @@
         renderizarTabela(filtrados);
     });
 
-    // Gráfico e Datas (simplificados)
+    // Funções de Apoio (Gráfico e Data)
     let chartObj;
     function atualizarGrafico(v, cor) {
         if(chartObj) chartObj.destroy();
@@ -175,9 +180,11 @@
 
     function setarDatas() {
         const hoje = new Date();
-        const seg = new Date(hoje.setDate(hoje.getDate() - hoje.getDay() + 1)).toLocaleDateString();
-        const sex = new Date(hoje.setDate(hoje.getDate() - hoje.getDay() + 5)).toLocaleDateString();
-        document.getElementById('data-semana').innerText = `Semana: ${seg} a ${sex}`;
+        const d = hoje.getDay();
+        const diff = hoje.getDate() - d + (d === 0 ? -6 : 1);
+        const segunda = new Date(new Date().setDate(diff)).toLocaleDateString();
+        const sexta = new Date(new Date().setDate(diff + 4)).toLocaleDateString();
+        document.getElementById('data-semana').innerText = `Período: ${segunda} a ${sexta}`;
     }
 
     setarDatas();
@@ -185,6 +192,7 @@
 </script>
 </body>
 </html>
+
 
 
 
