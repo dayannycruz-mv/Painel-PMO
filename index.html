@@ -106,39 +106,35 @@
         Papa.parse(csvOnboarding, {
     download: true, 
     header: true,
-    skipEmptyLines: true, // Ignora linhas em branco que o mesclado gera
+    skipEmptyLines: true,
     complete: function(res) {
-        if (res.data && res.data.length > 0) {
-            // Procura o primeiro valor válido na coluna 'Percentual'
-            // Isso resolve se houver buracos por causa de células mescladas
-            let dadoEncontrado = res.data.find(linha => linha.Percentual && linha.Percentual.trim() !== "");
-            
-            let valorTexto = dadoEncontrado ? String(dadoEncontrado.Percentual) : "0";
-            
-            // Limpa o valor (tira %, troca vírgula por ponto)
-            let valorLimpo = valorTexto.replace("%", "").replace(",", ".").trim();
-            const perc = Math.round(parseFloat(valorLimpo)) || 0;
-            
-            // Lógica de Cor
-            const cor = perc < 80 ? '#ff4d4f' : '#52c41a';
-            const statusText = perc < 80 ? 'Abaixo da Meta' : 'Meta Atingida';
-            
-            // Atualiza a tela
-            const elementoPerc = document.getElementById('txt-percentual');
-            const elementoStatus = document.getElementById('label-status');
+        // Log para você ver o que está chegando (aperte F12 no navegador para ver)
+        console.log("Dados do Onboarding:", res.data);
 
-            if(elementoPerc) {
-                elementoPerc.innerText = perc + "%";
-                elementoPerc.style.color = cor;
-            }
-            if(elementoStatus) {
-                elementoStatus.innerText = statusText;
-                elementoStatus.style.color = cor;
-            }
+        // Tenta encontrar a primeira linha que tenha um valor numérico na coluna Percentual
+        let linhaComDado = res.data.find(linha => {
+            let v = String(linha.Percentual || "").trim();
+            return v !== "" && !isNaN(parseFloat(v.replace(",", ".")));
+        });
+
+        if (linhaComDado) {
+            let valorTexto = String(linhaComDado.Percentual).replace("%", "").replace(",", ".");
+            const perc = Math.round(parseFloat(valorTexto));
+            
+            atualizarTelaOnboarding(perc);
+        } else {
+            console.error("Não encontrei o número 50 na coluna Percentual");
         }
     }
 });
 
+function atualizarTelaOnboarding(perc) {
+    const cor = perc < 80 ? '#ff4d4f' : '#52c41a';
+    document.getElementById('txt-percentual').innerText = perc + "%";
+    document.getElementById('txt-percentual').style.color = cor;
+    document.getElementById('label-status').innerText = perc < 80 ? 'Abaixo da Meta' : 'Meta Atingida';
+    document.getElementById('label-status').style.color = cor;
+}
         // Projetos em Atenção
         Papa.parse(csvProjetos, {
             download: true, 
@@ -231,6 +227,7 @@
 </script>
 </body>
 </html>
+
 
 
 
