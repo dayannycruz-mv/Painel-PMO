@@ -55,16 +55,14 @@
     </div>
     <div style="width: 150px;"></div> </header>
 
-<div class="container-fluid px-4 mt-4">
-    <div class="row g-4">
-        <div class="col-xl-3 col-lg-4">
-            <h5 class="section-title">Metas</h5>
-            <div class="card p-4 text-center mb-4">
-                <h6 class="text-muted mb-3 small">Participação Pré-Onboarding</h6>
-                <h2 id="txt-percentual" class="fw-bold mb-0">--%</h2>
-                <div style="height: 140px;"><canvas id="chartOnboarding"></canvas></div>
-            </div>
-
+<div class="card p-4 text-center mb-4">
+    <h6 class="text-muted mb-3 small text-uppercase">Participação Pré-Onboarding</h6>
+    <div style="padding: 20px 0;">
+        <h2 id="txt-percentual" style="font-size: 4rem; font-weight: 800; transition: 0.5s;">--%</h2>
+    </div>
+    <p id="label-status" class="small fw-bold text-uppercase" style="letter-spacing: 1px;"></p>
+</div>
+    
             <h5 class="section-title">Estratégico</h5>
             <div class="card p-3 bg-white text-center">
                 <p class="small fw-bold mb-2">Painel de Portfólio</p>
@@ -106,17 +104,30 @@
     function carregarDados() {
         // Onboarding (Metas)
         Papa.parse(csvOnboarding, {
-            download: true, header: true,
-            complete: function(res) {
-                if(res.data[0]) {
-                    const perc = parseFloat(res.data[0].Percentual || 0);
-                    const cor = perc < 80 ? '#ff4d4f' : '#52c41a';
-                    document.getElementById('txt-percentual').innerText = perc + "%";
-                    document.getElementById('txt-percentual').style.color = cor;
-                    atualizarGrafico(perc, cor);
-                }
-            }
-        });
+    download: true, 
+    header: true,
+    complete: function(res) {
+        if (res.data && res.data[0]) {
+            // Limpa o valor vindo da planilha
+            let valorBruto = String(res.data[0].Percentual || "0").replace("%", "").replace(",", ".");
+            const perc = Math.round(parseFloat(valorBruto)) || 0;
+            
+            // Define a cor baseada na meta (80%)
+            const cor = perc < 80 ? '#ff4d4f' : '#52c41a';
+            const statusText = perc < 80 ? 'Abaixo da Meta' : 'Meta Atingida';
+            
+            // Atualiza o HTML
+            const elementoPerc = document.getElementById('txt-percentual');
+            const elementoStatus = document.getElementById('label-status');
+
+            elementoPerc.innerText = perc + "%";
+            elementoPerc.style.color = cor;
+            
+            elementoStatus.innerText = statusText;
+            elementoStatus.style.color = cor;
+        }
+    }
+});
 
         // Projetos em Atenção
         Papa.parse(csvProjetos, {
@@ -210,6 +221,7 @@
 </script>
 </body>
 </html>
+
 
 
 
