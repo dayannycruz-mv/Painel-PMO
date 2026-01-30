@@ -124,12 +124,30 @@
             header: true,
             skipEmptyLines: true,
             complete: function(res) {
-                window.dadosProjetos = res.data;
-                renderizarTabela(res.data);
+                // ORDENAÇÃO: Vermelho -> Amarelo -> Outros (Verde) -> Ordem Alfabética
+                const dadosOrdenados = res.data.sort((a, b) => {
+                    const prioridade = { "vermelho": 1, "amarelo": 2, "verde": 3 };
+                    
+                    const farolA = (a.Farol || "").toLowerCase().trim();
+                    const farolB = (b.Farol || "").toLowerCase().trim();
+                    
+                    const pA = prioridade[farolA] || 99;
+                    const pB = prioridade[farolB] || 99;
+
+                    // Se a prioridade do farol for diferente, ordena por cor
+                    if (pA !== pB) {
+                        return pA - pB;
+                    }
+                    // Se for a mesma cor, ordena por ordem alfabética do Projeto
+                    return (a.Projeto || "").localeCompare(b.Projeto || "");
+                });
+
+                window.dadosProjetos = dadosOrdenados;
+                renderizarTabela(dadosOrdenados);
             }
         });
     }
-
+    
     function renderizarTabela(lista) {
         const body = document.getElementById('tabela-body');
         body.innerHTML = "";
@@ -192,6 +210,7 @@
 </script>
 </body>
 </html>
+
 
 
 
