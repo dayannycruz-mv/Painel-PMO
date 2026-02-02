@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Escritório de Projetos Fábrica</title>
+    <title>Dashboard Escritório de Projetos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
-        body { background-color: #f4f7f6; font-family: 'Inter', sans-serif; }
+        body { background-color: #f4f7f6; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         
-        /* Cabeçalho Verde Claro */
+        /* Cabeçalho Verde Claro - Estilo Versão 1 com cores novas */
         .header-section { 
             background: #eaffea; 
             color: #001529; 
@@ -18,71 +18,64 @@
             align-items: center;
             border-bottom: 3px solid #52c41a;
             margin-bottom: 30px;
+            width: 100%;
         }
-        .header-logo { width: 140px; height: auto; mix-blend-mode: multiply; }
+        .header-logo { width: 150px; height: auto; mix-blend-mode: multiply; }
         .header-content { flex-grow: 1; text-align: center; }
-        .subtitle-pm { color: #2d5a27; font-weight: 600; font-size: 0.9rem; margin-top: -5px; letter-spacing: 1px; }
+        .subtitle-pm { color: #2d5a27; font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Estrutura de Cards */
-        .card { border-radius: 12px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.08); background: white; }
+        /* Estrutura Lateral vs Principal (O Coração do Layout) */
+        .card { border-radius: 12px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 20px; }
         .section-title { border-left: 5px solid #52c41a; padding-left: 15px; margin-bottom: 20px; font-weight: bold; color: #001529; }
         
-        /* Farol e Ícones */
-        .farol { height: 15px; width: 15px; border-radius: 50%; display: inline-block; vertical-align: middle; }
+        /* Indicadores */
+        #txt-percentual { font-size: 3.5rem; font-weight: 800; display: block; }
+        .farol { height: 15px; width: 15px; border-radius: 50%; display: inline-block; }
         .bg-vermelho { background-color: #ff4d4f; box-shadow: 0 0 8px #ff4d4f; }
         .bg-amarelo { background-color: #ffec3d; box-shadow: 0 0 8px #ffec3d; }
         .bg-verde { background-color: #52c41a; box-shadow: 0 0 8px #52c41a; }
 
-        /* Onboarding */
-        #txt-percentual { font-size: 3.5rem; font-weight: 800; line-height: 1; margin: 15px 0; }
-        
-        .btn-bi { background-color: #f2c811; color: #333; font-weight: bold; border: none; transition: 0.3s; }
-        .btn-bi:hover { background-color: #d4ae0e; transform: translateY(-2px); }
+        .btn-bi { background-color: #f2c811; color: #333; font-weight: bold; border: none; width: 100%; }
     </style>
 </head>
 <body>
 
-<header class="header-section shadow-sm">
-    <div class="header-left">
-        <img src="MV.png" alt="Logo" class="header-logo">
-    </div>
+<header class="header-section">
+    <img src="MV.png" alt="Logo" class="header-logo">
     <div class="header-content">
         <h1 class="fw-bold m-0 h3">Gestão de Metas e Performance</h1>
-        <p class="subtitle-pm text-uppercase m-0">Escritório de Projetos Fábrica</p>
-        <small id="data-semana" class="text-muted fw-bold"></small>
+        <p class="subtitle-pm m-0">Escritório de Projetos Fábrica</p>
+        <small id="data-semana" class="text-muted"></small>
     </div>
-    <div style="width: 140px;"></div>
-</header>
+    <div style="width: 150px;"></div> </header>
 
 <div class="container-fluid px-4">
-    <div class="row g-4">
+    <div class="row">
         
-        <div class="col-xl-3 col-lg-4">
-            <h5 class="section-title">Metas Atuais</h5>
-            <div class="card p-4 text-center mb-4">
-                <h6 class="text-muted mb-2 small text-uppercase fw-bold">Pré-Onboarding</h6>
-                <h2 id="txt-percentual">--%</h2>
-                <p id="label-status" class="small fw-bold text-uppercase m-0"></p>
+        <div class="col-md-3">
+            <h5 class="section-title">Metas</h5>
+            <div class="card p-4 text-center">
+                <h6 class="text-muted small fw-bold">PRÉ-ONBOARDING</h6>
+                <span id="txt-percentual">--%</span>
+                <p id="label-status" class="small fw-bold m-0"></p>
             </div>
 
-            <h5 class="section-title">Estratégico</h5>
+            <h5 class="section-title">BI</h5>
             <div class="card p-4 text-center">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c9/Power_bi_logo_black.svg" alt="BI" class="mb-3" style="height: 30px;">
-                <p class="small text-muted">Acesse o painel completo de indicadores no Power BI.</p>
-                <a href="COLE_O_LINK_DO_BI_AQUI" target="_blank" class="btn btn-bi w-100 shadow-sm">ABRIR PAINEL BI ➔</a>
+                <p class="small text-muted">Painel de Indicadores</p>
+                <a href="LINK_DO_SEU_BI" target="_blank" class="btn btn-bi">ABRIR POWER BI ➔</a>
             </div>
         </div>
 
-        <div class="col-xl-9 col-lg-8">
-            <h5 class="section-title">Acompanhamento Operacional</h5>
+        <div class="col-md-9">
+            <h5 class="section-title">Projetos em Atenção</h5>
             <div class="card p-4">
-                <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
-                    <h6 class="text-danger fw-bold m-0">🚦 Projetos em Atenção (Priorizados)</h6>
-                    <input type="text" id="filtroProjeto" class="form-control form-control-sm w-50" placeholder="Buscar por projeto ou gerente...">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="badge bg-danger">Prioridade por Farol</span>
+                    <input type="text" id="filtro" class="form-control form-control-sm w-50" placeholder="Filtrar projetos...">
                 </div>
-                
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle" style="font-size: 0.85rem;">
+                    <table class="table table-hover align-middle">
                         <thead class="table-light">
                             <tr>
                                 <th>Projeto</th>
@@ -90,7 +83,7 @@
                                 <th>Status</th>
                                 <th>Tipo</th>
                                 <th>Gte. Serviços</th>
-                                <th>Gte. Fábrica/Flowti</th>
+                                <th>Gte. Fábrica</th>
                             </tr>
                         </thead>
                         <tbody id="tabela-body">
@@ -100,34 +93,28 @@
             </div>
         </div>
 
-    </div>
-</div>
-
-<script>
-    // LINKS DAS PLANILHAS (Substitua pelos seus links reais)
-    const csvOnboarding = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTgfQgFlnyb0o1MrBWpN91wRtvQm4ZqQ-3CVlMg3sfqRimzAxgRZMG8T10ngr8PdNKc-_6ldopN_vI2/pub?gid=1216741073&single=true&output=csv"; 
-    const csvProjetos = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTgfQgFlnyb0o1MrBWpN91wRtvQm4ZqQ-3CVlMg3sfqRimzAxgRZMG8T10ngr8PdNKc-_6ldopN_vI2/pub?gid=919732841&single=true&output=csv";    
+    </div> </div> <script>
+    const csvOnboarding = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTgfQgFlnyb0o1MrBWpN91wRtvQm4ZqQ-3CVlMg3sfqRimzAxgRZMG8T10ngr8PdNKc-_6ldopN_vI2/pub?gid=1216741073&single=true&output=csv";
+    const csvProjetos = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTgfQgFlnyb0o1MrBWpN91wRtvQm4ZqQ-3CVlMg3sfqRimzAxgRZMG8T10ngr8PdNKc-_6ldopN_vI2/pub?gid=919732841&single=true&output=csv";
 
     function carregarDados() {
-        // Lógica Onboarding "Caçador de Números"
+        // Onboarding - Lógica para pegar o número 50
         Papa.parse(csvOnboarding, {
             download: true, header: true, skipEmptyLines: true,
             complete: function(res) {
-                let linhaValida = res.data.find(l => l.Percentual && l.Percentual.trim() !== "");
-                if (linhaValida) {
-                    let valor = String(linhaValida.Percentual).replace("%", "").replace(",", ".");
-                    let perc = Math.round(parseFloat(valor)) || 0;
-                    
-                    const cor = perc < 80 ? '#ff4d4f' : '#52c41a';
-                    document.getElementById('txt-percentual').innerText = perc + "%";
+                let linha = res.data.find(l => l.Percentual && l.Percentual.trim() !== "");
+                if (linha) {
+                    let v = Math.round(parseFloat(String(linha.Percentual).replace("%", "").replace(",", "."))) || 0;
+                    const cor = v < 80 ? '#ff4d4f' : '#52c41a';
+                    document.getElementById('txt-percentual').innerText = v + "%";
                     document.getElementById('txt-percentual').style.color = cor;
-                    document.getElementById('label-status').innerText = perc < 80 ? 'Abaixo da Meta' : 'Meta Atingida';
+                    document.getElementById('label-status').innerText = v < 80 ? 'Abaixo da Meta' : 'Meta Atingida';
                     document.getElementById('label-status').style.color = cor;
                 }
             }
         });
 
-        // Lógica Projetos com Ordenação
+        // Projetos - Lógica de Ordenação
         Papa.parse(csvProjetos, {
             download: true, header: true, skipEmptyLines: true,
             complete: function(res) {
@@ -139,62 +126,37 @@
                     return (a.Projeto || "").localeCompare(b.Projeto || "");
                 });
                 window.dadosProjetos = dados;
-                renderizarTabela(dados);
+                renderizar(dados);
             }
         });
     }
 
-    function renderizarTabela(lista) {
+    function renderizar(lista) {
         const body = document.getElementById('tabela-body');
         body.innerHTML = "";
         lista.forEach(p => {
             if(!p.Projeto) return;
-            const f = (p.Farol || "").toLowerCase().trim();
-            const classeFarol = f.includes("vermelho") ? "bg-vermelho" : f.includes("verde") ? "bg-verde" : "bg-amarelo";
-
-            body.innerHTML += `
-                <tr>
-                    <td><strong>${p.Projeto}</strong></td>
-                    <td class="text-center"><span class="farol ${classeFarol}"></span></td>
-                    <td><small class="text-muted">${p.Status || ''}</small></td>
-                    <td><span class="badge bg-light text-primary border">${p.Tipo || ''}</span></td>
-                    <td>${p.Gerente_Servicos || p["Gerente Serviços"] || ''}</td>
-                    <td>${p.Gerente_Fabrica || p["Gerente Fábrica"] || ''}</td>
-                </tr>`;
+            const f = (p.Farol || "").toLowerCase();
+            const cor = f.includes("vermelho") ? "bg-vermelho" : f.includes("verde") ? "bg-verde" : "bg-amarelo";
+            body.innerHTML += `<tr>
+                <td><strong>${p.Projeto}</strong></td>
+                <td class="text-center"><span class="farol ${cor}"></span></td>
+                <td><small>${p.Status || ''}</small></td>
+                <td><span class="badge bg-light text-dark border">${p.Tipo || ''}</span></td>
+                <td>${p.Gerente_Servicos || ''}</td>
+                <td>${p.Gerente_Fabrica || ''}</td>
+            </tr>`;
         });
     }
 
-    document.getElementById('filtroProjeto').addEventListener('input', function(e) {
+    document.getElementById('filtro').addEventListener('input', (e) => {
         const t = e.target.value.toLowerCase();
-        const filtrados = window.dadosProjetos.filter(p => 
-            Object.values(p).some(val => String(val).toLowerCase().includes(t))
-        );
-        renderizarTabela(filtrados);
+        renderizar(window.dadosProjetos.filter(p => Object.values(p).some(v => String(v).toLowerCase().includes(t))));
     });
 
-    function setarDatas() {
-        const hoje = new Date();
-        const d = hoje.getDay();
-        const diff = hoje.getDate() - d + (d === 0 ? -6 : 1);
-        const seg = new Date(new Date().setDate(diff)).toLocaleDateString();
-        const sex = new Date(new Date().setDate(diff + 4)).toLocaleDateString();
-        document.getElementById('data-semana').innerText = `Semana: ${seg} a ${sex}`;
-    }
-
-    setarDatas();
+    const hoje = new Date();
+    document.getElementById('data-semana').innerText = `Atualizado em: ${hoje.toLocaleDateString()}`;
     carregarDados();
-    setInterval(carregarDados, 300000); // Atualiza a cada 5 min
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
